@@ -1,0 +1,6 @@
+{
+  "name": "Knowledger",
+  "description": "An elegant commonplace notebook and research companion for capturing, highlighting, and synthesizing knowledge.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

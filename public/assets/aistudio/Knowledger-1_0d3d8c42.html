@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Knowledger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f5;
+  --surface: #ffffff;
+  --sunk: #f3f1eb;
+  --ink: #141413;
+  --mute: #6c6a64;
+  --line: #e8e6dc;
+  --line-strong: #d9d6cb;
+  --accent: #c96442;
+  --accent-hover: #b55535;
+  --accent-soft: rgba(201, 100, 66, 0.12);
+  --accent-ink: #ffffff;
+  --hl: #fde8c8;
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --radius: 10px;
+  --shadow-sm: 0 1px 2px rgba(20, 20, 19, 0.04);
+  --shadow: 0 4px 16px rgba(20, 20, 19, 0.08);
+  --shadow-lg: 0 12px 40px rgba(20, 20, 19, 0.12);
+  box-sizing: border-box;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413; --surface: #1c1b19; --sunk: #252320;
+    --ink: #f5f4ed; --mute: #a09c92; --line: #30302e; --line-strong: #3d3c39;
+    --accent: #d97757; --accent-hover: #e08a6c;
+    --accent-soft: rgba(217, 119, 87, 0.18); --accent-ink: #141413; --hl: #3d3220;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141413; --surface: #1c1b19; --sunk: #252320;
+  --ink: #f5f4ed; --mute: #a09c92; --line: #30302e; --line-strong: #3d3c39;
+  --accent: #d97757; --accent-hover: #e08a6c;
+  --accent-soft: rgba(217, 119, 87, 0.18); --accent-ink: #141413; --hl: #3d3220;
+}
+* { box-sizing: inherit; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 15px/1.5 var(--ui); overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+#root { height: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; padding: 0; }
+button:focus-visible, [contenteditable]:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+h1, h2, h3 { font-family: var(--serif); font-weight: 550; margin: 0; letter-spacing: -0.02em; }
+mark {
+  background: var(--hl); color: inherit; border-radius: 3px; padding: 0 2px;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+.icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.icon svg { display: block; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--surface); font-weight: 500; font-size: 13px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover { background: var(--sunk); border-color: var(--line-strong); }
+.btn.pri { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.pri:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--sunk); }
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 99px; background: var(--sunk);
+  font-size: 12px; font-weight: 500; color: var(--mute);
+}
+.chip.on { background: var(--accent-soft); color: var(--accent); }
+.chip.accent { background: var(--accent); color: var(--accent-ink); }
+.seg { display: inline-flex; background: var(--sunk); border-radius: 9px; padding: 3px; }
+.seg button {
+  padding: 5px 14px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--mute);
+}
+.seg button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+.desk { display: flex; height: 100%; }
+.side {
+  width: 248px; flex: none; border-right: 1px solid var(--line);
+  padding: 20px 12px; display: flex; flex-direction: column; gap: 1px;
+  overflow: auto; background: var(--bg);
+}
+.brand {
+  font: 550 22px/1.2 var(--serif); padding: 4px 12px 18px;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.03em;
+}
+.brand .mark {
+  width: 28px; height: 28px; border-radius: 8px; background: var(--accent);
+  color: var(--accent-ink); display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 600; font-family: var(--serif);
+}
+.nav {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 8px 12px; border-radius: 8px; color: var(--mute); font-size: 14px;
+  transition: background 0.12s, color 0.12s;
+}
+.nav:hover { color: var(--ink); background: var(--sunk); }
+.nav.on { background: var(--sunk); color: var(--ink); font-weight: 500; }
+.nav .count {
+  margin-left: auto; font-size: 12px; color: var(--mute);
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 1px 7px; border-radius: 99px;
+}
+.side h3 {
+  font: 500 11px var(--ui); color: var(--mute); padding: 18px 12px 6px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.note-item {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  padding: 7px 12px; border-radius: 8px; color: var(--mute); font-size: 13px;
+}
+.note-item:hover { color: var(--ink); background: var(--sunk); }
+.note-item.on { background: var(--sunk); color: var(--ink); font-weight: 500; }
+.note-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); }
+.bar {
+  display: flex; align-items: center; gap: 10px; padding: 12px 28px;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.bar .sp { flex: 1; }
+.doc { overflow: auto; padding: 36px 28px 100px; flex: 1; }
+.page { max-width: 680px; margin: 0 auto; }
+.title { font: 550 34px/1.2 var(--serif); outline: 0; margin-bottom: 12px; letter-spacing: -0.03em; }
+.body { font: 17px/1.75 var(--serif); outline: 0; white-space: pre-wrap; }
+.meta { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 22px; }
+.quote {
+  border-left: 3px solid var(--accent); background: var(--sunk);
+  border-radius: 0 10px 10px 0; padding: 14px 16px; margin: 20px 0;
+  font: italic 16px/1.65 var(--serif);
+}
+.quote small {
+  display: block; font: 12px var(--ui); color: var(--accent);
+  margin-top: 8px; font-style: normal; font-weight: 500;
+}
+
+.research {
+  flex: none; border-left: 1px solid var(--line); background: var(--surface);
+  display: flex; flex-direction: column; position: relative; min-width: 0;
+}
+.grip { position: absolute; left: -4px; top: 0; bottom: 0; width: 8px; cursor: col-resize; z-index: 3; }
+.grip:hover { background: var(--accent); opacity: 0.3; }
+.rbar {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.rbar input {
+  flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--bg);
+  color: var(--ink); border-radius: 8px; padding: 8px 12px; font: inherit;
+}
+.rbar input:focus { outline: none; border-color: var(--accent); }
+.reader { overflow: auto; padding: 28px 26px 100px; font: 16.5px/1.75 var(--serif); flex: 1; }
+.reader h1 { font-size: 28px; margin-bottom: 6px; letter-spacing: -0.02em; }
+.reader .src {
+  font: 12.5px var(--ui); color: var(--mute); margin-bottom: 22px;
+  display: flex; align-items: center; gap: 6px;
+}
+.reader p { margin: 0 0 16px; }
+
+.card {
+  border: 1px solid var(--line); background: var(--surface);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+}
+.card:hover { border-color: var(--line-strong); }
+.card q { display: block; quotes: none; font: 15px/1.65 var(--serif); }
+.card .m {
+  display: flex; align-items: center; gap: 8px; margin-top: 10px;
+  font-size: 12px; color: var(--mute); flex-wrap: wrap;
+}
+.card .m a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.card .m a:hover { text-decoration: underline; }
+.empty { color: var(--mute); text-align: center; padding: 56px 24px; font-size: 14px; line-height: 1.6; }
+
+.seltb {
+  position: fixed; z-index: 50; display: flex; background: var(--ink); color: var(--bg);
+  border-radius: 10px; padding: 4px; box-shadow: var(--shadow-lg);
+  transform: translateX(-50%); animation: pop 0.15s ease;
+}
+.seltb button {
+  padding: 7px 11px; font-size: 13px; font-weight: 500; border-radius: 7px;
+  display: flex; align-items: center; gap: 5px;
+}
+.seltb button:hover { background: rgba(255,255,255,0.12); }
+.seltb .sep { width: 1px; background: rgba(255,255,255,0.15); margin: 4px 2px; }
+@keyframes pop {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px) scale(0.97); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+.toast {
+  position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%); z-index: 60; background: var(--ink); color: var(--bg);
+  padding: 12px 16px; border-radius: 12px; display: flex; gap: 16px; align-items: center;
+  font-size: 14px; font-weight: 500; box-shadow: var(--shadow-lg); max-width: 92vw;
+  animation: toastIn 0.2s ease;
+}
+.toast button { font-weight: 600; color: var(--accent); }
+.toast button:hover { text-decoration: underline; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.mob { height: 100%; display: flex; flex-direction: column; position: relative; background: var(--bg); }
+.mtop {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.mtop h1 { font-size: 20px; flex: 1; letter-spacing: -0.02em; }
+.mscroll { flex: 1; overflow: auto; padding: 14px 14px 100px; }
+.masonry { columns: 2; column-gap: 12px; }
+.masonry .card { break-inside: avoid; width: 100%; text-align: left; display: block; margin-bottom: 12px; cursor: pointer; }
+.masonry .card:hover, .listv .card:hover { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+.card h3 { font-size: 15.5px; margin-bottom: 5px; letter-spacing: -0.015em; }
+.card p {
+  margin: 0; color: var(--mute); font-size: 13px; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.listv .card { display: block; width: 100%; text-align: left; cursor: pointer; }
+.tabs {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex;
+  border-top: 1px solid var(--line); background: var(--surface);
+  padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 20;
+}
+.tabs button {
+  flex: 1; padding: 10px 0 12px; font-size: 11px; color: var(--mute);
+  display: flex; flex-direction: column; align-items: center; gap: 3px; font-weight: 500;
+}
+.tabs .on { color: var(--accent); }
+.drawer {
+  position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface);
+  border-radius: 18px 18px 0 0; border-top: 1px solid var(--line);
+  box-shadow: 0 -12px 40px rgba(20,20,19,0.12); z-index: 30;
+  display: flex; flex-direction: column;
+  transition: height 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.drawer .handle {
+  width: 36px; height: 4px; background: var(--line-strong); border-radius: 99px; margin: 10px auto 0;
+}
+.drawer .reader { padding: 12px 20px 40px; }
+.pill {
+  position: absolute; right: 16px; bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  z-index: 25; background: var(--accent); color: var(--accent-ink);
+  padding: 11px 18px; border-radius: 99px; font-weight: 600; font-size: 14px;
+  box-shadow: 0 6px 20px rgba(201, 100, 66, 0.35);
+  display: flex; align-items: center; gap: 7px;
+}
+.filters { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.theme-btn { margin-top: auto; padding-top: 16px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+const { useState, useEffect } = React;
+const h = React.createElement;
+
+// Inline SVG icons — no external dependency
+const ICONS = {
+  home: 'M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V9.5z',
+  folder: 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z',
+  library: 'M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z',
+  'file-text': 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
+  tags: 'M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01',
+  bookmark: 'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z',
+  network: 'M12 2a3 3 0 00-3 3v1a3 3 0 006 0V5a3 3 0 00-3-3zM5 12a3 3 0 00-3 3v1a3 3 0 006 0v-1a3 3 0 00-3-3zM19 12a3 3 0 00-3 3v1a3 3 0 006 0v-1a3 3 0 00-3-3z',
+  search: 'M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.35-4.35',
+  sparkles: 'M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z',
+  settings: 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z',
+  moon: 'M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z',
+  sun: 'M12 3v1M12 20v1M4.22 4.22l.7.7M18.36 18.36l.7.7M1 12h1M21 12h1M4.22 19.78l.7-.7M18.36 5.64l.7-.7M12 8a4 4 0 100 8 4 4 0 000-8z',
+  'panel-right': 'M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M3 12h12M10 8l4 4-4 4',
+  'panel-right-close': 'M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 12H3M7 8l-4 4 4 4',
+  'book-open': 'M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z',
+  copy: 'M20 9h-9a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-9a2 2 0 00-2-2zM5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1',
+  scissors: 'M6 9a3 3 0 100-6 3 3 0 000 6zM6 21a3 3 0 100-6 3 3 0 000 6zM20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12',
+  highlighter: 'M9 11l-6 6v3h9l3-3M22 12l-4.6 4.6a2 2 0 01-2.8 0l-5.2-5.2a2 2 0 010-2.8L14 4',
+  languages: 'M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2v3M12 22l4-10 4 10M15.5 18h5',
+  'more-horizontal': 'M5 12h.01M12 12h.01M19 12h.01',
+  'chevron-right': 'M9 18l6-6-6-6',
+  'chevron-left': 'M15 18l-6-6 6-6',
+  'chevron-up': 'M18 15l-6-6-6 6',
+  'chevron-down': 'M6 9l6 6 6-6',
+  'arrow-left': 'M19 12H5M12 19l-7-7 7-7',
+  list: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+  'layout-grid': 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z',
+  x: 'M18 6L6 18M6 6l12 12',
+  'maximize-2': 'M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7'
+};
+
+function Icon({ name, size = 18 }) {
+  const d = ICONS[name];
+  if (!d) return null;
+  // Split multi-path strings
+  const segments = d.replace(/([a-z])M/gi, '$1|M').split('|');
+  return h('span', { className: 'icon', style: { width: size, height: size } },
+    h('svg', {
+      width: size, height: size, viewBox: '0 0 24 24', fill: 'none',
+      stroke: 'currentColor', strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round'
+    },
+      segments.map((seg, i) => h('path', { key: i, d: seg.trim() }))
+    )
+  );
+}
+
+const ART = {
+  title: 'Commonplace book',
+  url: 'https://en.wikipedia.org/wiki/Commonplace_book',
+  paras: [
+    'A commonplace book is a way to compile knowledge, usually by writing information into a notebook. Such books are essentially scrapbooks filled with items of every kind: recipes, quotes, letters, poems, tables of weights and measures, proverbs, prayers and legal formulas.',
+    'Commonplaces are used by readers, writers, students and scholars as an aid for remembering useful concepts or facts they have learned. Each one is organised under headings so that an entry can be found again when it is needed.',
+    'In early modern Europe, students were taught to keep such books as part of their education. The practice shaped how people read: with a pen in hand, looking for passages worth copying and sorting them by theme.',
+    'Writers later adapted the method with indexes and cross-references, so that a single idea could be traced across many entries and many years. The commonplace book became a lifelong companion for thinking on paper.'
+  ]
+};
+
+const NOTES0 = [
+  { id: 1, title: 'Why copy by hand?', type: 'Claim', tags: ['method', 'reading'], body: 'Copying a passage forces a decision about what matters. The commonplace tradition treated the act of selecting as the first stage of thinking, not a chore before it.', q: [1] },
+  { id: 2, title: 'Headings as retrieval', type: 'Summary', tags: ['method'], body: 'Entries were filed under headings so they could be found again. The heading is the retrieval cue; the quote is the payload.', q: [2] },
+  { id: 3, title: 'Does the Scrapbook replace the index?', type: 'Question', tags: ['design'], body: 'If every highlight keeps its link and timestamp, how much indexing is still left for the writer to do? Test with five real research sessions before deciding.', q: [] },
+  { id: 4, title: 'Reading with a pen', type: 'Interpretation', tags: ['reading', 'history'], body: 'Students were taught to read looking for passages to keep. This reads like an early form of highlighting with a purpose attached.', q: [3] },
+  { id: 5, title: 'Interview prompts', type: 'Question', tags: ['phase 0'], body: 'What do you do today after you highlight something? Where does it go? How do you find it three weeks later?', q: [] },
+  { id: 6, title: 'Cross-references', type: 'Summary', tags: ['history', 'method'], body: 'Later writers added indexes so a single idea could be traced across many entries and years.', q: [4] }
+];
+
+const SCRAP0 = [
+  { id: 1, type: 'highlight', text: 'Each one is organised under headings so that an entry can be found again when it is needed.', at: Date.now() - 864e5 * 2, rev: true },
+  { id: 2, type: 'highlight', text: 'The practice shaped how people read: with a pen in hand, looking for passages worth copying and sorting them by theme.', at: Date.now() - 36e5 * 5, rev: false }
+];
+
+const fmt = t => new Date(t).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+
+const useWide = () => {
+  const q = '(min-width: 1024px)';
+  const [w, setW] = useState(window.matchMedia(q).matches);
+  useEffect(() => {
+    const m = window.matchMedia(q);
+    const f = () => setW(m.matches);
+    m.addEventListener('change', f);
+    return () => m.removeEventListener('change', f);
+  }, []);
+  return w;
+};
+
+function Reader({ scrap, onSel }) {
+  const mark = p => {
+    const hit = scrap.find(i => p.includes(i.text));
+    if (!hit) return p;
+    const k = p.indexOf(hit.text);
+    return [p.slice(0, k), h('mark', { key: 'm' }, hit.text), p.slice(k + hit.text.length)];
+  };
+  const up = () => setTimeout(() => {
+    const s = window.getSelection();
+    const t = s.toString().trim();
+    if (t.length < 3 || s.rangeCount === 0) return onSel(null);
+    const r = s.getRangeAt(0).getBoundingClientRect();
+    onSel({
+      text: t,
+      x: Math.min(Math.max(r.left + r.width / 2, 160), window.innerWidth - 160),
+      y: Math.max(r.top - 56, 10)
+    });
+  }, 12);
+  return h('div', { className: 'reader', onMouseUp: up, onTouchEnd: up },
+    h('h1', null, ART.title),
+    h('div', { className: 'src' },
+      h(Icon, { name: 'book-open', size: 14 }),
+      ' en.wikipedia.org · Reader view'
+    ),
+    ART.paras.map((p, i) => h('p', { key: i }, mark(p)))
+  );
+}
+
+function Scrap({ scrap, toNote }) {
+  const [f, setF] = useState('all');
+  const list = scrap.filter(i => f === 'all' || (f === 'new' ? !i.rev : i.type === f));
+  return h('div', null,
+    h('div', { className: 'filters' },
+      [['all', 'All'], ['highlight', 'Highlights'], ['new', 'Unreviewed']].map(([k, l]) =>
+        h('button', { key: k, className: 'chip' + (f === k ? ' on' : ''), onClick: () => setF(k) }, l)
+      )
+    ),
+    list.length === 0 && h('div', { className: 'empty' },
+      h(Icon, { name: 'bookmark', size: 32 }),
+      h('div', { style: { marginTop: 12 } }, 'Nothing here yet.'),
+      h('div', null, 'Select text in the reader and choose Save.')
+    ),
+    list.map(i => h('div', { className: 'card', key: i.id },
+      h('q', null, i.text),
+      h('div', { className: 'm' },
+        h('span', null, fmt(i.at)),
+        h('a', { href: ART.url, target: '_blank', rel: 'noopener' }, 'Commonplace book'),
+        !i.rev && h('span', { className: 'chip accent' }, 'New'),
+        h('span', { style: { flex: 1 } }),
+        h('button', { className: 'btn', onClick: () => toNote(i) },
+          'Turn into note', h(Icon, { name: 'chevron-right', size: 14 })
+        )
+      )
+    ))
+  );
+}
+
+function NoteView({ note, edit }) {
+  return h('div', { className: 'page' },
+    h('div', {
+      className: 'title', contentEditable: true, suppressContentEditableWarning: true,
+      onBlur: e => edit({ title: e.target.innerText })
+    }, note.title),
+    h('div', { className: 'meta' },
+      h('span', { className: 'chip on' }, note.type),
+      note.tags.map(t => h('span', { className: 'chip', key: t }, '#' + t))
+    ),
+    h('div', {
+      className: 'body', contentEditable: true, suppressContentEditableWarning: true,
+      onBlur: e => edit({ body: e.target.innerText })
+    }, note.body),
+    note.ev && note.ev.map(i =>
+      h('div', { className: 'quote', key: i.id },
+        i.text,
+        h('small', null, 'Commonplace book · saved ' + fmt(i.at))
+      )
+    )
+  );
+}
+
+function App() {
+  const wide = useWide();
+  const [notes, setNotes] = useState(NOTES0);
+  const [scrap, setScrap] = useState(SCRAP0);
+  const [nid, setNid] = useState(1);
+  const [view, setView] = useState('note');
+  const [screen, setScreen] = useState('home');
+  const [list, setList] = useState(false);
+  const [panel, setPanel] = useState(480);
+  const [open, setOpen] = useState(true);
+  const [drawer, setDrawer] = useState('closed');
+  const [sel, setSel] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const note = notes.find(n => n.id === nid) || notes[0];
+  const edit = p => setNotes(ns => ns.map(n => n.id === note.id ? { ...n, ...p } : n));
+
+  const say = (msg, undo, openS) => {
+    setToast({ msg, undo, openS });
+    clearTimeout(say.t);
+    say.t = setTimeout(() => setToast(null), 4800);
+  };
+
+  const save = type => {
+    if (!sel) return;
+    const it = { id: Date.now(), type, text: sel.text, at: Date.now(), rev: false };
+    setScrap(s => [it, ...s]);
+    window.getSelection().removeAllRanges();
+    setSel(null);
+    say(
+      type === 'highlight' ? 'Highlighted and saved' : 'Saved to Scrapbook',
+      () => setScrap(s => s.filter(x => x.id !== it.id)),
+      () => {
+        if (wide) setView('scrap');
+        else { setDrawer('closed'); setScreen('editor'); setView('scrap'); }
+      }
+    );
+  };
+
+  const toNote = i => {
+    const n = {
+      id: Date.now(),
+      title: i.text.split(' ').slice(0, 6).join(' ') + '…',
+      type: 'Claim', tags: [], body: '', q: [], ev: [i]
+    };
+    setNotes(ns => [n, ...ns]);
+    setScrap(s => s.map(x => x.id === i.id ? { ...x, rev: true } : x));
+    setNid(n.id);
+    setView('note');
+    if (!wide) setScreen('editor');
+    say('Note created from Scrapbook item');
+  };
+
+  const act = {
+    copy: () => {
+      if (navigator.clipboard) navigator.clipboard.writeText(sel.text).catch(() => {});
+      setSel(null); say('Copied to clipboard');
+    },
+    cut: () => {
+      if (navigator.clipboard) navigator.clipboard.writeText(sel.text).catch(() => {});
+      setSel(null); say('Cut copied. Source text stays in the reader.');
+    },
+    tr: () => { setSel(null); say('Translate arrives in Phase 3'); },
+    more: () => { setSel(null); say('More actions arrive in Phase 3'); }
+  };
+
+  const tb = sel && h('div', {
+    className: 'seltb', style: { left: sel.x, top: sel.y },
+    onMouseDown: e => e.preventDefault(), onTouchStart: e => e.preventDefault()
+  },
+    h('button', { onClick: () => save('evidence') }, h(Icon, { name: 'bookmark', size: 14 }), ' Save'),
+    h('button', { onClick: act.copy }, h(Icon, { name: 'copy', size: 14 }), ' Copy'),
+    h('button', { onClick: act.cut }, h(Icon, { name: 'scissors', size: 14 }), ' Cut'),
+    h('div', { className: 'sep' }),
+    h('button', { onClick: () => save('highlight') }, h(Icon, { name: 'highlighter', size: 14 }), ' Highlight'),
+    h('button', { onClick: act.tr }, h(Icon, { name: 'languages', size: 14 }), ' Translate'),
+    h('button', { onClick: act.more, 'aria-label': 'More' }, h(Icon, { name: 'more-horizontal', size: 14 }))
+  );
+
+  const tt = toast && h('div', { className: 'toast', role: 'status' },
+    toast.msg,
+    toast.openS && h('button', { onClick: () => { toast.openS(); setToast(null); } }, 'Open'),
+    toast.undo && h('button', { onClick: () => { toast.undo(); setToast(null); } }, 'Undo')
+  );
+
+  const seg = h('div', { className: 'seg' },
+    ['note', 'scrap'].map(k =>
+      h('button', { key: k, className: view === k ? 'on' : '', onClick: () => setView(k) },
+        k === 'note' ? 'Note' : 'Scrapbook')
+    )
+  );
+
+  const grip = e => {
+    e.preventDefault();
+    const mv = ev => setPanel(Math.min(Math.max(window.innerWidth - ev.clientX, 320), window.innerWidth * 0.52));
+    const up = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', mv);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (wide) {
+    const navItems = [
+      { name: 'Home', icon: 'home' },
+      { name: 'Projects', icon: 'folder' },
+      { name: 'Library', icon: 'library' },
+      { name: 'Notes', icon: 'file-text' },
+      { name: 'Topics', icon: 'tags' },
+      { name: 'Scrapbook', icon: 'bookmark', count: scrap.length },
+      { name: 'Graph', icon: 'network' },
+      { name: 'Search', icon: 'search' },
+      { name: 'AI Writer', icon: 'sparkles' },
+      { name: 'Settings', icon: 'settings' }
+    ];
+    return h('div', { className: 'desk' },
+      h('aside', { className: 'side' },
+        h('div', { className: 'brand' }, h('div', { className: 'mark' }, 'K'), 'Knowledger'),
+        navItems.map(item =>
+          h('button', {
+            key: item.name,
+            className: 'nav' + ((item.name === 'Notes' && view === 'note') || (item.name === 'Scrapbook' && view === 'scrap') ? ' on' : ''),
+            onClick: () => {
+              if (item.name === 'Scrapbook') setView('scrap');
+              else if (item.name === 'Notes') setView('note');
+            }
+          },
+            h(Icon, { name: item.icon, size: 17 }),
+            item.name,
+            item.count != null && h('span', { className: 'count' }, item.count)
+          )
+        ),
+        h('h3', null, 'Recent notes'),
+        notes.slice(0, 8).map(n =>
+          h('button', {
+            key: n.id,
+            className: 'note-item' + (n.id === note.id ? ' on' : ''),
+            onClick: () => { setNid(n.id); setView('note'); }
+          },
+            h(Icon, { name: 'file-text', size: 14 }),
+            h('span', null, n.title)
+          )
+        ),
+        h('div', { className: 'theme-btn' },
+          h('button', { className: 'nav', onClick: () => setTheme(t => t === 'light' ? 'dark' : 'light') },
+            h(Icon, { name: theme === 'light' ? 'moon' : 'sun', size: 17 }),
+            theme === 'light' ? 'Dark mode' : 'Light mode'
+          )
+        )
+      ),
+      h('main', { className: 'main' },
+        h('div', { className: 'bar' },
+          seg,
+          h('span', { className: 'sp' }),
+          !open && h('button', { className: 'btn', onClick: () => setOpen(true) },
+            h(Icon, { name: 'panel-right', size: 15 }), ' Research'
+          )
+        ),
+        h('div', { className: 'doc' },
+          view === 'note'
+            ? h(NoteView, { note, edit })
+            : h('div', { className: 'page' },
+                h('h2', { style: { marginBottom: 20, fontSize: 26 } }, 'Scrapbook'),
+                h(Scrap, { scrap, toNote })
+              )
+        )
+      ),
+      open && h('aside', { className: 'research', style: { width: panel } },
+        h('div', { className: 'grip', onMouseDown: grip }),
+        h('div', { className: 'rbar' },
+          h(Icon, { name: 'search', size: 16 }),
+          h('input', { defaultValue: 'commonplace book', 'aria-label': 'Search Wikipedia', placeholder: 'Search Wikipedia…' }),
+          h('button', { className: 'btn ghost', onClick: () => setOpen(false), 'aria-label': 'Collapse' },
+            h(Icon, { name: 'panel-right-close', size: 16 })
+          )
+        ),
+        h(Reader, { scrap, onSel: setSel })
+      ),
+      tb, tt
+    );
+  }
+
+  // Mobile
+  const home = h('div', { className: 'mob' },
+    h('div', { className: 'mtop' },
+      h('h1', null, screen === 'home' ? 'Notes' : screen === 'library' ? 'Library' : 'Scrapbook'),
+      screen === 'home' && h('button', { className: 'btn', onClick: () => setList(!list) },
+        h(Icon, { name: list ? 'layout-grid' : 'list', size: 15 }), list ? ' Grid' : ' List'
+      ),
+      h('button', { className: 'btn pri', onClick: () => setDrawer('half') },
+        h(Icon, { name: 'search', size: 15 }), ' Research'
+      )
+    ),
+    h('div', { className: 'mscroll' },
+      screen === 'home' && h('div', { className: list ? 'listv' : 'masonry' },
+        notes.map(n =>
+          h('button', {
+            className: 'card', key: n.id,
+            onClick: () => { setNid(n.id); setView('note'); setScreen('editor'); }
+          },
+            h('h3', null, n.title),
+            h('p', null, n.body),
+            h('div', { className: 'meta', style: { margin: '10px 0 0' } },
+              h('span', { className: 'chip' }, n.type),
+              (n.q.length + (n.ev ? n.ev.length : 0)) > 0 &&
+                h('span', { className: 'chip' }, (n.q.length + (n.ev ? n.ev.length : 0)) + ' sources')
+            )
+          )
+        )
+      ),
+      screen === 'scrapbook' && h(Scrap, { scrap, toNote }),
+      screen === 'library' && h('div', { className: 'card' },
+        h('h3', null, 'Commonplace book'),
+        h('p', null, 'Wikipedia · en.wikipedia.org · ' + scrap.length + ' saved items')
+      )
+    ),
+    h('nav', { className: 'tabs' },
+      [
+        { k: 'home', l: 'Notes', icon: 'file-text' },
+        { k: 'library', l: 'Library', icon: 'library' },
+        { k: 'scrapbook', l: 'Scrapbook', icon: 'bookmark' }
+      ].map(({ k, l, icon }) =>
+        h('button', { key: k, className: screen === k ? 'on' : '', onClick: () => setScreen(k) },
+          h(Icon, { name: icon, size: 20 }), l
+        )
+      )
+    )
+  );
+
+  const editor = h('div', { className: 'mob' },
+    h('div', { className: 'mtop' },
+      h('button', { className: 'btn ghost', onClick: () => setScreen('home'), 'aria-label': 'Back' },
+        h(Icon, { name: 'arrow-left', size: 18 })
+      ),
+      seg,
+      h('span', { style: { flex: 1 } }),
+      h('button', { className: 'btn pri', onClick: () => setDrawer('half') },
+        h(Icon, { name: 'search', size: 15 }), ' Research'
+      )
+    ),
+    h('div', { className: 'mscroll' },
+      view === 'note' ? h(NoteView, { note, edit }) : h(Scrap, { scrap, toNote })
+    )
+  );
+
+  const ht = { closed: 0, peek: 96, half: '55%', full: '92%' }[drawer];
+
+  return h('div', { style: { height: '100%', position: 'relative', overflow: 'hidden' } },
+    screen === 'editor' ? editor : home,
+    drawer === 'closed' && h('button', { className: 'pill', onClick: () => setScreen('scrapbook') },
+      h(Icon, { name: 'bookmark', size: 16 }), ' Scrapbook · ' + scrap.length
+    ),
+    drawer !== 'closed' && h('div', { className: 'drawer', style: { height: ht } },
+      h('div', { className: 'handle' }),
+      h('div', { className: 'rbar' },
+        h('button', {
+          className: 'btn ghost', 'aria-label': 'Resize',
+          onClick: () => setDrawer(drawer === 'full' ? 'half' : drawer === 'half' ? 'peek' : 'full')
+        }, h(Icon, { name: drawer === 'peek' ? 'chevron-up' : 'chevron-down', size: 18 })),
+        h('input', { defaultValue: 'commonplace book', 'aria-label': 'Search', placeholder: 'Search…' }),
+        drawer !== 'peek' && h('button', { className: 'btn ghost', onClick: () => setDrawer('full') },
+          h(Icon, { name: 'maximize-2', size: 16 })
+        ),
+        h('button', { className: 'btn ghost', onClick: () => setDrawer('closed') },
+          h(Icon, { name: 'x', size: 16 })
+        )
+      ),
+      drawer !== 'peek' && h(Reader, { scrap, onSel: setSel }),
+      drawer === 'peek' && h('div', { className: 'empty', style: { padding: '12px' } }, 'Drag up or tap the chevron to read')
+    ),
+    tb, tt
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+</body>
+</html>
